@@ -1,0 +1,772 @@
+/* ============================================================
+   LUXURY SMART HOME DASHBOARD — styles.css
+   Dark glassmorphism · Cyan accent · Premium feel
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+/* ── RESET & BASE ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Core palette */
+  --bg-void:      #020408;
+  --bg-deep:      #050c14;
+  --bg-mid:       #080f1a;
+  --navy:         #0a1628;
+  --navy-2:       #0d1f35;
+
+  /* Glass surfaces */
+  --glass-bg:     rgba(10, 22, 40, 0.55);
+  --glass-border: rgba(0, 200, 255, 0.10);
+  --glass-shine:  rgba(255,255,255,0.035);
+
+  /* Accent — electric cyan */
+  --cyan:         #00c8ff;
+  --cyan-dim:     rgba(0, 200, 255, 0.18);
+  --cyan-glow:    rgba(0, 200, 255, 0.35);
+
+  /* Status colors */
+  --green:        #00e5a0;
+  --green-dim:    rgba(0, 229, 160, 0.18);
+  --yellow:       #ffd166;
+  --orange:       #ff9a3c;
+  --red:          #ff4d6d;
+  --purple:       #c77dff;
+
+  /* Typography */
+  --text-primary:   #f0f6ff;
+  --text-secondary: rgba(200, 220, 255, 0.60);
+  --text-muted:     rgba(160, 190, 230, 0.38);
+
+  /* Radii */
+  --r-sm:   10px;
+  --r-md:   16px;
+  --r-lg:   22px;
+  --r-xl:   30px;
+
+  /* Shadows */
+  --shadow-card: 0 8px 40px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-cyan: 0 0 40px rgba(0,200,255,0.12), 0 0 80px rgba(0,200,255,0.06);
+  --shadow-hover:0 12px 60px rgba(0,0,0,0.6), 0 0 30px rgba(0,200,255,0.15);
+
+  /* Transitions */
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --fast: 0.18s;
+  --mid:  0.35s;
+  --slow: 0.6s;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg-void);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+/* ── SCROLLBAR ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+
+/* ── ANIMATED BACKGROUND ───────────────────────────────────── */
+#bg-canvas {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-gradient {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 85%, rgba(0,200,255,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 20%, rgba(0,80,160,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 100% 80% at 50% 50%, rgba(5,12,20,0.85) 0%, var(--bg-void) 100%);
+}
+
+/* ── APP WRAPPER ───────────────────────────────────────────── */
+#app {
+  position: relative; z-index: 2;
+  width: 100vw; height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 100%;
+  gap: 0;
+  padding: 12px 14px 0;
+  overflow: hidden;
+}
+
+/* ── GLASS CARD BASE ───────────────────────────────────────── */
+.card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow var(--mid) var(--ease), border-color var(--mid) var(--ease), transform var(--mid) var(--ease);
+}
+
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,200,255,0.25) 40%, rgba(255,255,255,0.12) 60%, transparent 100%);
+  pointer-events: none;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(0,200,255,0.18);
+  transform: translateY(-1px);
+}
+
+.card-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.card-label::before {
+  content: '';
+  display: inline-block;
+  width: 14px; height: 1px;
+  background: var(--cyan);
+  opacity: 0.6;
+}
+
+/* ── TOP HEADER STRIP ──────────────────────────────────────── */
+#header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 10px;
+  gap: 12px;
+}
+
+/* Greeting */
+#greeting {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  min-width: 160px;
+}
+#greeting span { color: var(--cyan); font-weight: 600; }
+
+/* ── CLOCK ─────────────────────────────────────────────────── */
+#clock-block {
+  text-align: center;
+  flex: 1;
+}
+
+#clock-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(38px, 5.5vw, 72px);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  line-height: 1;
+  text-shadow: 0 0 40px rgba(0,200,255,0.18);
+  transition: opacity 0.08s;
+}
+
+#clock-time .colon {
+  opacity: 1;
+  animation: blink 1s step-start infinite;
+  color: var(--cyan);
+}
+
+@keyframes blink {
+  50% { opacity: 0.25; }
+}
+
+#clock-date {
+  font-size: clamp(11px, 1.2vw, 14px);
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  margin-top: 3px;
+  font-weight: 400;
+}
+
+/* System status mini strip */
+#sys-mini {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 160px;
+  justify-content: flex-end;
+}
+
+.sys-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(10,22,40,0.7);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  backdrop-filter: blur(10px);
+}
+
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse-green 2.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.status-dot.offline { background: var(--red); box-shadow: 0 0 8px var(--red); animation: none; }
+
+@keyframes pulse-green {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--green); }
+  50% { opacity: 0.6; box-shadow: 0 0 4px var(--green); }
+}
+
+/* ── MAIN GRID ─────────────────────────────────────────────── */
+#main-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr 250px;
+  gap: 12px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── LEFT COLUMN ───────────────────────────────────────────── */
+#left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+/* Weather Card */
+#weather-card {
+  flex: 1.2;
+  padding: 16px 16px 12px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.weather-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.weather-icon-wrap {
+  font-size: 48px;
+  line-height: 1;
+  filter: drop-shadow(0 0 12px rgba(0,200,255,0.3));
+  animation: float 4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.weather-temp-block .temp-main {
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.weather-temp-block .temp-feels {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.weather-desc {
+  font-size: 12px;
+  color: var(--cyan);
+  font-weight: 500;
+  text-transform: capitalize;
+  margin-bottom: 10px;
+}
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.weather-stat {
+  background: rgba(0,200,255,0.04);
+  border: 1px solid rgba(0,200,255,0.07);
+  border-radius: var(--r-sm);
+  padding: 6px 8px;
+}
+.weather-stat .ws-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+.weather-stat .ws-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 5-day forecast */
+.forecast-row {
+  display: flex;
+  gap: 5px;
+  margin-top: auto;
+}
+
+.forecast-day {
+  flex: 1;
+  text-align: center;
+  background: rgba(0,200,255,0.04);
+  border: 1px solid rgba(0,200,255,0.07);
+  border-radius: var(--r-sm);
+  padding: 6px 4px;
+  font-size: 10px;
+}
+.forecast-day .fc-day { color: var(--text-muted); margin-bottom: 3px; }
+.forecast-day .fc-icon { font-size: 16px; margin: 2px 0; }
+.forecast-day .fc-hi { color: var(--text-primary); font-weight: 600; }
+.forecast-day .fc-lo { color: var(--text-muted); }
+
+/* AQI Card */
+#aqi-card {
+  flex: 1;
+  padding: 14px 16px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.aqi-body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+}
+
+/* SVG gauge */
+.aqi-gauge-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 90px; height: 90px;
+}
+
+.aqi-gauge-wrap svg { width: 100%; height: 100%; }
+
+.aqi-gauge-bg { stroke: rgba(255,255,255,0.06); }
+.aqi-gauge-arc {
+  transition: stroke-dashoffset 1.2s var(--ease), stroke 0.8s var(--ease);
+  stroke-linecap: round;
+}
+
+.aqi-center-val {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.aqi-center-val .aqi-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+}
+.aqi-center-val .aqi-lbl { font-size: 8px; color: var(--text-muted); letter-spacing: 0.08em; }
+
+.aqi-info { flex: 1; min-width: 0; }
+.aqi-category {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.aqi-stats { display: flex; flex-direction: column; gap: 4px; }
+.aqi-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+.aqi-stat-row .asr-label { color: var(--text-muted); }
+.aqi-stat-row .asr-val { color: var(--text-primary); font-weight: 500; font-family: 'JetBrains Mono', monospace; }
+
+.aqi-recommendation {
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding: 6px 8px;
+  background: rgba(0,0,0,0.2);
+  border-radius: var(--r-sm);
+  border-left: 2px solid currentColor;
+}
+
+/* ── CENTER COLUMN ─────────────────────────────────────────── */
+#center-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Exchange rate header */
+#exchange-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.exch-pair {
+  display: flex;
+  flex-direction: column;
+}
+.exch-pair .pair-name {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.exch-pair .pair-rate {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 400;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.exch-change {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.change-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.02em;
+}
+.change-badge.up   { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.25); }
+.change-badge.down { background: rgba(255,77,109,0.12); color: var(--red);   border: 1px solid rgba(255,77,109,0.25); }
+.change-badge.flat { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.08); }
+
+.exch-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* TradingView timeframe tabs */
+.tv-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 16px;
+  flex-shrink: 0;
+}
+
+.tv-tab {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(0,200,255,0.12);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--fast) var(--ease);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.04em;
+}
+.tv-tab:hover { border-color: var(--cyan); color: var(--text-secondary); }
+.tv-tab.active {
+  background: var(--cyan-dim);
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 12px rgba(0,200,255,0.15);
+}
+
+/* TradingView chart container */
+#chart-card {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  border-radius: var(--r-lg);
+}
+
+#tradingview-widget-container {
+  width: 100%;
+  height: 100%;
+}
+
+#tradingview-widget-container iframe {
+  border-radius: var(--r-lg) !important;
+}
+
+/* ── RIGHT COLUMN ──────────────────────────────────────────── */
+#right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+/* System status card */
+#system-card {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sys-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: var(--r-sm);
+  transition: border-color var(--fast);
+}
+.sys-row:hover { border-color: var(--glass-border); }
+
+.sys-row-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.sys-icon { font-size: 14px; width: 20px; text-align: center; }
+.sys-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Battery bar */
+.battery-visual {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.battery-bar-track {
+  width: 44px; height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+}
+.battery-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--green);
+  transition: width 0.8s var(--ease), background 0.5s;
+}
+.battery-bar-fill.low { background: var(--red); }
+.battery-bar-fill.mid { background: var(--yellow); }
+
+/* Last refresh */
+#last-refresh-card {
+  padding: 12px 16px;
+  flex-shrink: 0;
+}
+.refresh-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 8px;
+}
+.refresh-item {
+  text-align: center;
+  padding: 6px;
+  background: rgba(0,0,0,0.2);
+  border-radius: var(--r-sm);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.ri-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.ri-time { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--cyan); margin-top: 2px; }
+
+/* ── BOTTOM DOCK ───────────────────────────────────────────── */
+#dock {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(5,12,20,0.75);
+  border: 1px solid rgba(0,200,255,0.12);
+  border-radius: 40px;
+  padding: 8px 14px;
+  backdrop-filter: blur(30px) saturate(1.6);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 20px rgba(0,200,255,0.06);
+  transition: opacity var(--mid), transform var(--mid) var(--ease);
+}
+
+#dock.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(20px);
+}
+
+.dock-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,200,255,0.12);
+  background: rgba(0,200,255,0.05);
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--fast) var(--ease);
+  position: relative;
+}
+.dock-btn:hover {
+  background: var(--cyan-dim);
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 16px rgba(0,200,255,0.2);
+  transform: translateY(-2px);
+}
+.dock-btn:active { transform: translateY(0) scale(0.95); }
+
+.dock-sep {
+  width: 1px; height: 22px;
+  background: rgba(0,200,255,0.1);
+}
+
+/* ── LOADING SKELETON ──────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── ERROR STATE ───────────────────────────────────────────── */
+.error-state {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 6px; color: var(--text-muted);
+  font-size: 11px; text-align: center;
+  padding: 16px;
+}
+.error-state .err-icon { font-size: 24px; }
+
+/* ── TOOLTIP ───────────────────────────────────────────────── */
+[data-tip] { position: relative; }
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%; transform: translateX(-50%);
+  background: rgba(10,22,40,0.95);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 10px;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--fast);
+  backdrop-filter: blur(10px);
+}
+[data-tip]:hover::after { opacity: 1; }
+
+/* ── FADE IN ANIMATION ─────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card { animation: fadeUp 0.55s var(--ease) both; }
+#weather-card     { animation-delay: 0.05s; }
+#aqi-card         { animation-delay: 0.10s; }
+#exchange-header  { animation-delay: 0.15s; }
+#chart-card       { animation-delay: 0.20s; }
+#system-card      { animation-delay: 0.25s; }
+#last-refresh-card{ animation-delay: 0.30s; }
+
+/* ── PARTICLES CANVAS ──────────────────────────────────────── */
+#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.4; }
+
+/* ── RESPONSIVE ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  #app { padding: 10px 10px 0; }
+  #main-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+  #left-col { grid-column: 1; grid-row: 1 / 3; }
+  #center-col { grid-column: 2; grid-row: 1; }
+  #right-col { grid-column: 2; grid-row: 2; }
+}
+
+@media (max-width: 600px) {
+  #main-grid { grid-template-columns: 1fr; }
+  #left-col, #center-col, #right-col { grid-column: 1; grid-row: auto; overflow: auto; }
+  #app { overflow-y: auto; height: auto; }
+}
+
+/* ── GLOW AMBIENT ──────────────────────────────────────────── */
+.glow-cyan {
+  box-shadow: var(--shadow-card), var(--shadow-cyan);
+}
+
+/* Number transition animation */
+.num-transition {
+  display: inline-block;
+  transition: transform 0.3s var(--ease), opacity 0.2s;
+}
+.num-transition.updating {
+  transform: translateY(-4px);
+  opacity: 0;
+}
