@@ -78,12 +78,12 @@ const Clock = (() => {
 
   const update = () => {
     const now = new Date();
-    const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+    const h = now.getHours(), m = now.getMinutes();
     const day = DAYS[now.getDay()];
     const date = `${day}, ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 
     if (el_time)
-      el_time.innerHTML = `${pad(h)}<span class="colon">:</span>${pad(m)}<span class="colon" style="font-size:0.55em;opacity:0.5">:${pad(s)}</span>`;
+      el_time.innerHTML = `${pad(h)}<span class="colon">:</span>${pad(m)}`;
 
     if (el_date) el_date.textContent = date;
 
