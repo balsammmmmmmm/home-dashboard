@@ -27,8 +27,8 @@ const CONFIG = {
   EXCHANGE_TARGET: 'KZT',
 
   // Update intervals (milliseconds)
-  WEATHER_INTERVAL: 15 * 60 * 1000,   // 15 minutes
-  AQI_INTERVAL: 15 * 60 * 1000,       // 15 minutes
+  WEATHER_INTERVAL: 12 * 60 * 60 * 1000,   // 12 hours
+  AQI_INTERVAL: 12 * 60 * 60 * 1000,       // 12 hours
   EXCHANGE_INTERVAL: 5 * 60 * 1000,   // 5 minutes
   CLOCK_INTERVAL: 1000,                // 1 second
 
