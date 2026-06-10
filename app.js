@@ -422,7 +422,7 @@ const TradingViewWidget = (() => {
     script.async = true;
     script.innerHTML = JSON.stringify({
       autosize: true,
-      symbol: 'FX:USDKZT',
+      symbol: 'USDKZT',
       interval: INTERVAL_MAP[interval] || 'D',
       timezone: CONFIG.TIMEZONE,
       theme: 'dark',
@@ -474,16 +474,6 @@ const TradingViewWidget = (() => {
    8. SYSTEM STATUS MODULE
    ============================================================ */
 const SystemStatus = (() => {
-  const updateNetwork = () => {
-    const dot   = document.getElementById('net-dot');
-    const label = document.getElementById('net-label');
-    const online = navigator.onLine;
-    if (dot) {
-      dot.className = `status-dot ${online ? '' : 'offline'}`;
-    }
-    if (label) label.textContent = online ? 'Online' : 'Offline';
-  };
-
   const updateBattery = async () => {
     if (!navigator.getBattery) return;
     try {
@@ -515,13 +505,9 @@ const SystemStatus = (() => {
   };
 
   const init = () => {
-    updateNetwork();
     updateBattery();
     updateTime();
-    setInterval(updateNetwork, 5000);
     setInterval(updateTime, 1000);
-    window.addEventListener('online',  updateNetwork);
-    window.addEventListener('offline', updateNetwork);
   };
 
   return { init };
