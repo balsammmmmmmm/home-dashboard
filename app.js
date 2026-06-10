@@ -365,19 +365,19 @@ const Exchange = (() => {
     }
 
     try {
-      // Use exchangerate.host (free, no key needed)
-      const res  = await fetch(`https://api.exchangerate.host/latest?base=USD&symbols=KZT`);
+      // Use frankfurter.dev (free, no key needed)
+      const res  = await fetch(`https://api.frankfurter.dev/v2/rate/USD/KZT`);
       const json = await res.json();
-      const rate = json.rates?.KZT;
+      const rate = json.rate;
       if (!rate) throw new Error('No rate');
       const payload = { rate, prev: lastRate };
       render(rate, lastRate);
       Cache.set(CONFIG.CACHE.EXCHANGE, payload, CONFIG.EXCHANGE_INTERVAL);
       lastRate = rate;
     } catch (e) {
-      // Fallback: try frankfurter.app
+      // Fallback: try exchangerate-api
       try {
-        const res  = await fetch(`https://api.frankfurter.app/latest?from=USD&to=KZT`);
+        const res  = await fetch(`https://api.exchangerate-api.com/v4/latest/USD`);
         const json = await res.json();
         const rate = json.rates?.KZT;
         if (!rate) throw new Error('No rate fallback');
