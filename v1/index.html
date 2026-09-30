@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#f3f3ee" />
+  <title>Home Dashboard / V1</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <main class="dashboard-grid">
+      <section class="dashboard-column market-column" aria-label="Market">
+        <article id="exchange-header" class="panel exchange-panel">
+          <div class="panel-kicker">Foreign exchange / live rate</div>
+          <div class="exchange-main">
+            <div>
+              <div class="pair-name">USD <span>/</span> KZT</div>
+              <div class="pair-rate" id="exch-rate">--</div>
+            </div>
+            <div class="exchange-change">
+              <div class="change-badge flat" id="exch-change">--%</div>
+              <div class="exchange-meta" id="exch-meta">FETCHING</div>
+            </div>
+          </div>
+          <div class="chart-tabs" role="tablist" aria-label="Chart range">
+            <button class="chart-tab active" data-range="1W" role="tab">1W</button>
+            <button class="chart-tab" data-range="1M" role="tab">1M</button>
+            <button class="chart-tab" data-range="3M" role="tab">3M</button>
+            <button class="chart-tab" data-range="6M" role="tab">6M</button>
+            <button class="chart-tab" data-range="1Y" role="tab">1Y</button>
+          </div>
+          <div id="chart-card" class="chart-frame">
+            <canvas id="fx-chart" role="img" aria-label="USD to KZT exchange rate history"></canvas>
+            <div class="chart-empty" id="fx-chart-empty" hidden>History unavailable</div>
+          </div>
+          <div class="chart-meta">
+            <span>Low <strong id="fx-low">--</strong></span>
+            <span>High <strong id="fx-high">--</strong></span>
+            <span>Change <strong id="fx-change">--</strong></span>
+          </div>
+        </article>
+
+        <article class="panel refresh-panel">
+          <div class="panel-kicker">Data ledger</div>
+          <div class="refresh-list">
+            <div class="refresh-row"><span>Weather</span><strong id="refresh-weather">--:--</strong></div>
+            <div class="refresh-row"><span>Air quality</span><strong id="refresh-aqi">--:--</strong></div>
+            <div class="refresh-row"><span>FX rate</span><strong id="refresh-exchange">--:--</strong></div>
+            <div class="refresh-row"><span>System status</span><strong class="status-live" id="refresh-status">LIVE</strong></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="dashboard-column conditions-column" aria-label="Conditions">
+        <article id="weather-card" class="panel weather-panel">
+          <div class="panel-kicker">Weather / Santa Rosa Beach</div>
+          <div class="weather-overview">
+            <div class="weather-icon-wrap" id="wx-icon">--</div>
+            <div class="weather-temperature">
+              <div class="temp-main" id="wx-temp">--°</div>
+              <div class="temp-feels" id="wx-feels">FEELS --°</div>
+            </div>
+            <div class="weather-description" id="wx-desc">LOADING</div>
+          </div>
+          <div class="weather-stats">
+            <div class="weather-stat"><span>Humidity</span><strong id="wx-hum">--%</strong></div>
+            <div class="weather-stat"><span>Wind</span><strong id="wx-wind">-- km/h</strong></div>
+            <div class="weather-stat"><span>Sunrise</span><strong id="wx-rise">--:--</strong></div>
+            <div class="weather-stat"><span>Sunset</span><strong id="wx-set">--:--</strong></div>
+          </div>
+          <div class="subheading"><span>Five day outlook</span><span>°C</span></div>
+          <div class="forecast-row" id="wx-forecast">
+            <div class="forecast-day skeleton"></div>
+            <div class="forecast-day skeleton"></div>
+            <div class="forecast-day skeleton"></div>
+            <div class="forecast-day skeleton"></div>
+            <div class="forecast-day skeleton"></div>
+          </div>
+        </article>
+
+        <article id="aqi-card" class="panel aqi-panel">
+          <div class="panel-kicker">Atmosphere / air quality index</div>
+          <div class="aqi-headline">
+            <div class="aqi-number"><span id="aqi-num">--</span><small>AQI</small></div>
+            <div class="aqi-info">
+              <div class="aqi-category" id="aqi-category">LOADING</div>
+              <div class="aqi-stats">
+                <span>PM 2.5 <strong id="aqi-pm25">--</strong></span>
+                <span>PM 10 <strong id="aqi-pm10">--</strong></span>
+              </div>
+            </div>
+          </div>
+          <div class="aqi-meter" aria-label="Air quality level"><span id="aqi-meter-fill"></span></div>
+          <div class="aqi-scale"><span>GOOD</span><span>MODERATE</span><span>HAZARDOUS</span></div>
+          <p class="aqi-recommendation" id="aqi-rec">Checking air quality...</p>
+        </article>
+      </section>
+
+      <section class="dashboard-column status-column" aria-label="Status">
+        <article class="panel clock-panel">
+          <div class="panel-kicker">Local time / America Chicago</div>
+          <div id="clock-time">00<span class="colon">:</span>00</div>
+          <div id="clock-date">Loading...</div>
+          <div class="clock-location">SANTA ROSA BEACH <span>/</span> FLORIDA</div>
+        </article>
+
+        <article id="system-card" class="panel system-panel">
+          <div class="panel-kicker">Device telemetry</div>
+          <div class="system-list">
+            <div class="system-row">
+              <div><span class="system-index">A</span><span>Network</span></div>
+              <strong class="system-online"><span id="net-dot2" class="status-dot"></span><span id="net-label2">Online</span></strong>
+            </div>
+            <div class="system-row">
+              <div><span class="system-index">B</span><span>Battery</span></div>
+              <strong class="battery-readout"><span class="battery-track"><span id="bat-fill"></span></span><span id="bat-pct">--%</span></strong>
+            </div>
+            <div class="system-row">
+              <div><span class="system-index">C</span><span>Power</span></div>
+              <strong id="bat-charging">--</strong>
+            </div>
+            <div class="system-row">
+              <div><span class="system-index">D</span><span>Beach time</span></div>
+              <strong id="sys-tz">--:--:--</strong>
+            </div>
+            <div class="system-row">
+              <div><span class="system-index">E</span><span>Timezone</span></div>
+              <strong class="system-muted">America/Chicago</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel note-panel">
+          <div class="panel-kicker">System note</div>
+          <p>Live browser dashboard. External data is cached locally between refresh cycles.</p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer-bar">
+      <span>HOME DASHBOARD / V1</span>
+      <span>WEATHER + AIR + FX + DEVICE</span>
+      <div class="control-group">
+        <button id="btn-theme" type="button">Dark</button>
+        <button id="btn-settings" type="button">Config</button>
+        <button id="btn-refresh" type="button">Refresh</button>
+        <button id="btn-fullscreen" type="button">Fullscreen</button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
