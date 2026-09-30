@@ -92,6 +92,7 @@ const Clock = (() => {
       timeElement.innerHTML = `${hour}<span class="colon">:</span>${minute}`;
     }
     setText('clock-date', Time.date());
+    setText('clock-astana', Time.clock(CONFIG.ASTANA_TIMEZONE));
     setText('sys-tz', Time.clock(CONFIG.TIMEZONE, true));
   };
 
@@ -114,15 +115,28 @@ const Refresh = (() => {
 })();
 
 const Weather = (() => {
-  const WX_ICONS = {
-    '01d': '☀', '01n': '◐', '02d': '◒', '02n': '◒',
-    '03d': '☁', '03n': '☁', '04d': '☁', '04n': '☁',
-    '09d': '☂', '09n': '☂', '10d': '☂', '10n': '☂',
-    '11d': 'ϟ', '11n': 'ϟ', '13d': '❄', '13n': '❄',
-    '50d': '≋', '50n': '≋'
+  const ICONS = {
+    sun: '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
+    moon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
+    partly: '<circle cx="7.5" cy="7.5" r="2.5"/><path d="M7.5 2v1.6M12.6 7.5H11M10.4 4.6 9.3 3.5M10.4 10.4l-1.1 1.1M4.6 4.6 3.5 3.5"/><path d="M17 20h-7.5a4 4 0 0 1-.6-7.96A5 5 0 0 1 18.5 14.5 3.5 3.5 0 0 1 17 20z"/>',
+    cloud: '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>',
+    rain: '<path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/><path d="M8 13v5M12 15v5M16 13v5"/>',
+    snow: '<path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"/><path d="M8 16h.01M8 20h.01M12 18h.01M12 22h.01M16 16h.01M16 20h.01"/>',
+    storm: '<path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 9"/><path d="M13 11l-4 6h6l-4 6"/>',
+    wind: '<path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>'
   };
 
-  const toIcon = code => WX_ICONS[code] || '·';
+  const WX_ICONS = {
+    '01d': 'sun', '01n': 'moon', '02d': 'partly', '02n': 'moon',
+    '03d': 'cloud', '03n': 'cloud', '04d': 'cloud', '04n': 'cloud',
+    '09d': 'rain', '09n': 'rain', '10d': 'rain', '10n': 'rain',
+    '11d': 'storm', '11n': 'storm', '13d': 'snow', '13n': 'snow',
+    '50d': 'wind', '50n': 'wind'
+  };
+
+  const svg = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.sun}</svg>`;
+
+  const toIcon = code => svg(WX_ICONS[code] || 'sun');
 
   const render = (weather, forecast) => {
     const current = weather.current;
@@ -131,7 +145,8 @@ const Weather = (() => {
     const feels = Math.round(current.main.feels_like);
     const wind = (current.wind.speed * 3.6).toFixed(1);
 
-    setText('wx-icon', toIcon(condition.icon));
+    const iconElement = $('wx-icon');
+    if (iconElement) iconElement.innerHTML = toIcon(condition.icon);
     setText('wx-temp', `${temp}°`);
     setText('wx-feels', `FEELS ${feels}°`);
     setText('wx-desc', condition.description || 'Unavailable');
@@ -269,10 +284,12 @@ const Exchange = (() => {
     if (changeElement && previous !== null && Number(previous) !== Number(rate)) {
       const difference = Number(rate) - Number(previous);
       const percentage = ((difference / Number(previous)) * 100).toFixed(2);
+      changeElement.hidden = false;
       changeElement.textContent = `${difference > 0 ? '+' : ''}${percentage}%`;
       changeElement.className = `change-badge ${difference > 0 ? 'up' : 'down'}`;
     } else if (changeElement) {
-      changeElement.textContent = previous === null ? '--%' : '0.00%';
+      changeElement.hidden = previous === null;
+      changeElement.textContent = '0.00%';
       changeElement.className = 'change-badge flat';
     }
 
@@ -525,6 +542,64 @@ const SystemStatus = (() => {
   return { init };
 })();
 
+const Immich = (() => {
+  const formatCount = value => Number(value).toLocaleString(CONFIG.LOCALE);
+
+  const formatBytes = bytes => {
+    const gib = bytes / 1024 ** 3;
+    return gib >= 1024 ? `${(gib / 1024).toFixed(2)} TiB` : `${gib.toFixed(1)} GiB`;
+  };
+
+  const render = (statistics, storage, about) => {
+    setText('immich-photos', formatCount(statistics.photos));
+    setText('immich-videos', formatCount(statistics.videos));
+    setText('immich-usage', formatBytes(statistics.usage));
+    setText('immich-storage', `${storage.diskUse} / ${storage.diskSize}`);
+    setText('immich-version', about.version);
+    setText('immich-used-pct', `${Number(storage.diskUsagePercentage).toFixed(1)}% used`);
+
+    const fill = $('immich-bar-fill');
+    if (fill) fill.style.width = `${Math.min(Number(storage.diskUsagePercentage), 100)}%`;
+  };
+
+  const load = async () => {
+    const key = CONFIG.IMMICH_API_KEY;
+    if (!key) return;
+
+    const cached = Cache.get(CONFIG.CACHE.IMMICH);
+    if (cached) {
+      render(cached.statistics, cached.storage, cached.about);
+      return;
+    }
+
+    const base = CONFIG.IMMICH_BASE.replace(/\/+$/, '');
+    const query = `apiKey=${encodeURIComponent(key)}`;
+    try {
+      const [statistics, storage, about] = await Promise.all([
+        fetchJson(`${base}/api/server/statistics?${query}`),
+        fetchJson(`${base}/api/server/storage?${query}`),
+        fetchJson(`${base}/api/server/about?${query}`)
+      ]);
+      render(statistics, storage, about);
+      Cache.set(CONFIG.CACHE.IMMICH, { statistics, storage, about }, CONFIG.IMMICH_INTERVAL);
+    } catch (error) {
+      setText('immich-version', 'unavailable');
+      setText('immich-used-pct', 'check connection');
+      console.error('V1 immich error:', error);
+    }
+  };
+
+  const init = () => {
+    if (!CONFIG.IMMICH_API_KEY) return;
+    const card = $('immich-card');
+    if (card) card.hidden = false;
+    load();
+    setInterval(load, CONFIG.IMMICH_INTERVAL);
+  };
+
+  return { init, reload: load };
+})();
+
 const Theme = (() => {
   const KEY = 'dash_v1_theme';
   const COLORS = { light: '#f1f1ec', dark: '#141412' };
@@ -555,7 +630,7 @@ const Theme = (() => {
   };
 
   const init = () => {
-    apply(read() === 'dark' ? 'dark' : 'light');
+    apply(read() === 'light' ? 'light' : 'dark');
     $('btn-theme')?.addEventListener('click', toggle);
   };
 
@@ -568,8 +643,9 @@ const Controls = (() => {
     Cache.clear(CONFIG.CACHE.WEATHER);
     Cache.clear(CONFIG.CACHE.AQI);
     Cache.clear(CONFIG.CACHE.EXCHANGE);
+    Cache.clear(CONFIG.CACHE.IMMICH);
     FxChart.clear();
-    await Promise.all([Weather.load(), AQI.load(), Exchange.load(), FxChart.reload()]);
+    await Promise.all([Weather.load(), AQI.load(), Exchange.load(), FxChart.reload(), Immich.reload()]);
     Refresh.setState(navigator.onLine ? 'LIVE' : 'OFFLINE');
   };
 
@@ -597,5 +673,6 @@ document.addEventListener('DOMContentLoaded', () => {
   Exchange.init();
   FxChart.init();
   SystemStatus.init();
+  Immich.init();
   Controls.init();
 });

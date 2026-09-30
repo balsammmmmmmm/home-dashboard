@@ -10,7 +10,7 @@ const CONFIG = {
   WEATHER_UNITS: 'metric',
 
   AQI_TOKEN: '7433bb39a54c31b191843a765a4a278eb11af53e',
-  AQI_CITY: 'panama city beach',
+  AQI_CITY: '@6282',
 
   LATITUDE: 30.3468,
   LONGITUDE: -86.1915,
@@ -20,19 +20,25 @@ const CONFIG = {
   EXCHANGE_BASE: 'USD',
   EXCHANGE_TARGET: 'KZT',
 
+  IMMICH_BASE: 'https://img.aunas.qzz.io',
+  IMMICH_API_KEY: window.IMMICH_API_KEY || '',
+
   WEATHER_INTERVAL: 12 * 60 * 60 * 1000,
   AQI_INTERVAL: 12 * 60 * 60 * 1000,
   EXCHANGE_INTERVAL: 5 * 60 * 1000,
   FX_HISTORY_INTERVAL: 60 * 60 * 1000,
+  IMMICH_INTERVAL: 10 * 60 * 1000,
   CLOCK_INTERVAL: 1000,
 
   TIMEZONE: 'America/Chicago',
+  ASTANA_TIMEZONE: 'Asia/Almaty',
   LOCALE: 'en-US',
 
   CACHE: {
     WEATHER: 'dash_v1_weather',
     AQI: 'dash_v1_aqi',
     EXCHANGE: 'dash_v1_exchange',
-    FX_HISTORY: 'dash_v1_fx_history'
+    FX_HISTORY: 'dash_v1_fx_history',
+    IMMICH: 'dash_v1_immich'
   }
 };

@@ -11,7 +11,7 @@ const CONFIG = {
 
   // WAQI Air Quality API - https://waqi.info/
   AQI_TOKEN: '7433bb39a54c31b191843a765a4a278eb11af53e',
-  AQI_CITY: 'panama city beach',
+  AQI_CITY: '@6282',
 
   // Location coordinates (used for precise weather)
   LATITUDE: 30.3468,

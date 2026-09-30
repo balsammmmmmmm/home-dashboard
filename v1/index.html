@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="theme-color" content="#f3f3ee" />
+  <meta name="theme-color" content="#141412" />
   <title>Home Dashboard / V1</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -22,7 +22,7 @@
               <div class="pair-rate" id="exch-rate">--</div>
             </div>
             <div class="exchange-change">
-              <div class="change-badge flat" id="exch-change">--%</div>
+              <div class="change-badge flat" id="exch-change" hidden>--%</div>
               <div class="exchange-meta" id="exch-meta">FETCHING</div>
             </div>
           </div>
@@ -106,6 +106,7 @@
           <div id="clock-time">00<span class="colon">:</span>00</div>
           <div id="clock-date">Loading...</div>
           <div class="clock-location">SANTA ROSA BEACH <span>/</span> FLORIDA</div>
+          <div class="clock-astana">Astana <strong id="clock-astana">--:--</strong></div>
         </article>
 
         <article id="system-card" class="panel system-panel">
@@ -134,6 +135,21 @@
           </div>
         </article>
 
+        <article id="immich-card" class="panel immich-panel" hidden>
+          <div class="panel-kicker">Immich / media library</div>
+          <div class="immich-list">
+            <div class="immich-row"><span>Photos</span><strong id="immich-photos">--</strong></div>
+            <div class="immich-row"><span>Videos</span><strong id="immich-videos">--</strong></div>
+            <div class="immich-row"><span>Library</span><strong id="immich-usage">--</strong></div>
+            <div class="immich-row"><span>Storage</span><strong id="immich-storage">--</strong></div>
+          </div>
+          <div class="immich-bar"><span id="immich-bar-fill"></span></div>
+          <div class="immich-foot">
+            <span id="immich-version">--</span>
+            <span id="immich-used-pct">--</span>
+          </div>
+        </article>
+
         <article class="panel note-panel">
           <div class="panel-kicker">System note</div>
           <p>Live browser dashboard. External data is cached locally between refresh cycles.</p>
@@ -153,6 +169,7 @@
     </footer>
   </div>
 
+  <script src="secrets.js"></script>
   <script src="config.js"></script>
   <script src="app.js"></script>
 </body>

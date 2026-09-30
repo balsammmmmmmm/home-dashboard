@@ -29,7 +29,7 @@
   --paper-deep: #1e1e1b;
   --ink: #ecece5;
   --ink-soft: #b8b8b0;
-  --ink-muted: #83837b;
+  --ink-muted: #8d8d84;
   --line: #f2f2ea;
   --line-soft: #4b4b45;
   --line-faint: #2d2d29;
@@ -192,6 +192,10 @@ button:focus-visible {
   color: var(--paper);
 }
 
+.change-badge[hidden] {
+  display: none;
+}
+
 .exchange-meta {
   margin-top: 6px;
   color: var(--ink-muted);
@@ -315,12 +319,15 @@ button:focus-visible {
 }
 
 .weather-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--ink);
-  font-family: "Arial Unicode MS", Arial, sans-serif;
-  font-size: 60px;
-  line-height: 1;
-  text-align: center;
-  filter: grayscale(1);
+}
+
+.weather-icon-wrap svg {
+  width: 64px;
+  height: 64px;
 }
 
 .temp-main {
@@ -399,6 +406,7 @@ button:focus-visible {
 .forecast-day {
   min-height: 105px;
   padding: 8px 4px;
+  border-top: 1px solid var(--line-faint);
   text-align: center;
 }
 
@@ -416,10 +424,15 @@ button:focus-visible {
 }
 
 .forecast-day .fc-icon {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 10px 0 8px;
-  font-size: 22px;
-  line-height: 1;
+}
+
+.forecast-day .fc-icon svg {
+  width: 22px;
+  height: 22px;
 }
 
 .forecast-day .fc-hi {
@@ -553,6 +566,28 @@ button:focus-visible {
   letter-spacing: 0.11em;
 }
 
+.clock-astana {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line-faint);
+  color: var(--ink-muted);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.clock-astana strong {
+  color: var(--ink);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
 .system-panel {
   padding-bottom: 16px;
 }
@@ -601,6 +636,61 @@ button:focus-visible {
 .system-muted {
   color: var(--ink-muted) !important;
   font-size: 10px !important;
+}
+
+.immich-list {
+  margin-top: 11px;
+}
+
+.immich-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 31px;
+  border-bottom: 1px solid var(--line-faint);
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.immich-row:last-child {
+  border-bottom: 0;
+}
+
+.immich-row strong {
+  color: var(--ink);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.immich-bar {
+  height: 9px;
+  margin-top: 10px;
+  padding: 1px;
+  border: 1px solid var(--line);
+}
+
+.immich-bar span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--ink);
+  transition: width 0.3s ease;
+}
+
+.immich-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+  color: var(--ink-muted);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .note-panel p {
@@ -722,8 +812,9 @@ button:focus-visible {
     gap: 10px;
   }
 
-  .weather-icon-wrap {
-    font-size: 48px;
+  .weather-icon-wrap svg {
+    width: 52px;
+    height: 52px;
   }
 
   .weather-description {
@@ -744,7 +835,11 @@ button:focus-visible {
   .forecast-day .fc-icon {
     margin-top: 8px;
     margin-bottom: 6px;
-    font-size: 18px;
+  }
+
+  .forecast-day .fc-icon svg {
+    width: 18px;
+    height: 18px;
   }
 
   .aqi-headline {
